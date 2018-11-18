@@ -20,7 +20,7 @@ function randomNumberInRange(min, max) {
 }
 
 const randomSleep = async () => {
-  await timeout(1000 * randomNumberInRange(5, 10));
+  await timeout(1000 * randomNumberInRange(1, 1));
 };
 
 databaseService.setDefaults();
@@ -62,21 +62,21 @@ databaseService.setDefaults();
     console.log('despues timeout');
     await randomSleep();
 
-    let availableDates = await page.evaluate(() => {
+    let availableSessions = await page.evaluate(() => {
       let data = [];
       let elements = document.getElementsByClassName('hasSession');
       for (let element of elements) data.push(element.textContent);
       return data;
     });
 
-    console.log(availableDates);
+    console.log(availableSessions);
     let subscribers = databaseService.selectSubscribers();
     console.log(subscribers);
-    databaseService.insertScraperLog(availableDates);
 
-    subscribers.map((subscriber) => emailService.sendMail(subscriber.email, JSON.stringify(availableDates)))
+    subscribers.map((subscriber) => emailService.notificateChanges(subscriber.email, JSON.stringify(availableSessions), availableSessions));
 
     await page.screenshot({ path: `./screenshots/screenshot.png` });
+    databaseService.insertScraperLog(availableSessions);
   } catch (err) {
     console.log(err);
   }

@@ -29,6 +29,11 @@ const insertScraperLog = (data) => {
     .write();
 };
 
+const getScraperLog = () => {
+  return db.get('scraperLog')
+    .value();
+};
+
 const insertNotificationLog = (email) => {
   return db.get('subscribers')
     .find({ email: email })
@@ -37,6 +42,13 @@ const insertNotificationLog = (email) => {
       time: moment().toISOString()
     })
     .write();
+};
+
+const getNotificationLog = (email) => {
+  return db.get('subscribers')
+    .find({ email: email })
+    .get('notificationLog')
+    .value();
 };
 
 const selectUrl = () => {
@@ -52,7 +64,9 @@ const selectSubscribers = () => {
 module.exports = {
   setDefaults,
   insertScraperLog,
+  getScraperLog,
   insertNotificationLog,
+  getNotificationLog,
   selectUrl,
   selectSubscribers
 };
