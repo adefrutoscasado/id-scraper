@@ -8,15 +8,17 @@ class CatalogPage extends Webpage {
   }
 
   async getProductsId() {
-    await this.loadJQuery()
     let selector = CONSTANTS.PRODUCT_ID_SELECTOR
-    return await this.page.evaluate(() => {
-      document.getElementById('footer').querySelectorAll('[data-asin]')
-      // `let data = []
-      // let elements = $("[data-asin]")
-      // for (let element of elements) data.push(element.textContent)
-      // return data`
-    })
+    try {
+      return await this.page.evaluate(({selector}) => {
+        let data = []
+        let elements = document.querySelectorAll(`[${selector}]`)
+        for (let element of elements) data.push(element.getAttribute(`${selector}`))
+        return data
+      }, {selector})
+    } catch (err) {
+      throw new Error(`Unable to get products Id using selector ${selector}`)
+    }
   }
 }
 
