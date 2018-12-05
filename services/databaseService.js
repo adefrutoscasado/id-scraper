@@ -1,8 +1,8 @@
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const moment = require('moment');
-const adapter = new FileSync('db.json');
-const db = low(adapter);
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+const moment = require('moment')
+const adapter = new FileSync('db.json')
+const db = low(adapter)
 
 
 const setDefaults = () => {
@@ -17,8 +17,8 @@ const setDefaults = () => {
       ],
       'scraperLog': []
     }
-  ).write();
-};
+  ).write()
+}
 
 const insertScraperLog = (data) => {
   return db.get('scraperLog')
@@ -26,13 +26,13 @@ const insertScraperLog = (data) => {
       time: moment().toISOString(),
       data: data
     })
-    .write();
-};
+    .write()
+}
 
 const getScraperLog = () => {
   return db.get('scraperLog')
-    .value();
-};
+    .value()
+}
 
 const insertNotificationLog = (email) => {
   return db.get('subscribers')
@@ -41,25 +41,25 @@ const insertNotificationLog = (email) => {
     .push({
       time: moment().toISOString()
     })
-    .write();
-};
+    .write()
+}
 
 const getNotificationLog = (email) => {
   return db.get('subscribers')
     .find({ email: email })
     .get('notificationLog')
-    .value();
-};
+    .value()
+}
 
 const selectUrl = () => {
   return db.get('url')
-    .value();
-};
+    .value()
+}
 
 const selectSubscribers = () => {
   return db.get('subscribers')
-    .value();
-};
+    .value()
+}
 
 module.exports = {
   setDefaults,
@@ -69,4 +69,4 @@ module.exports = {
   getNotificationLog,
   selectUrl,
   selectSubscribers
-};
+}
