@@ -6,7 +6,6 @@ var logger = require('morgan')
 
 const livereload = require('livereload')
 const livereloadMiddleware = require('connect-livereload')
-const fs = require('fs')
 
 // Create a livereload server
 const hotServer = livereload.createServer({

@@ -1,3 +1,9 @@
 node_modules/
-screenshots/*.png
-screenshots/products/*.png
+
+# Untrack screenshots folder content, except products folder
+/public/images/screenshots/*
+!/public/images/screenshots/products
+
+# Untrack products folder content, except gitkeep file
+/public/images/screenshots/products/*
+!/public/images/screenshots/products/.gitkeep

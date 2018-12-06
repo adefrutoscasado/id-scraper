@@ -29,7 +29,7 @@ class Webpage {
     this.loadedCanvas2Html = true
   }
 
-  async screenshotDOMElement(selector, outputPath = './screenshots/DOMelement.png', padding = 0) {
+  async screenshotDOMElement(selector, outputPath = './public/images/screenshots/DOMelement.png', padding = 0) {
     try {
       const rect = await this.page.evaluate(selector => {
         const element = document.querySelector(selector)
@@ -50,7 +50,6 @@ class Webpage {
       throw new Error(`Unable to screenshot DOM element using selector ${selector}.\nError: ${error}`)
     }
   }
-
 }
 
 module.exports = Webpage

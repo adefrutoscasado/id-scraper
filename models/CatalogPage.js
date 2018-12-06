@@ -23,9 +23,8 @@ class CatalogPage extends Webpage {
 
   async screenshotProduct(productId) {
     let selector = CONSTANTS.PRODUCT_ID_SELECTOR
-    await this.screenshotDOMElement(`[${selector}='${productId}']`, `./screenshots/products/${productId}.png`)
+    await this.screenshotDOMElement(`[${selector}='${productId}']`, `./public/images/screenshots/products/${productId}.png`)
   }
-
 }
 
 module.exports = CatalogPage
