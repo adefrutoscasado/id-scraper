@@ -20,6 +20,12 @@ class CatalogPage extends Webpage {
       throw new Error(`Unable to get products Id using selector ${selector}`)
     }
   }
+
+  async screenshotProduct(productId) {
+    let selector = CONSTANTS.PRODUCT_ID_SELECTOR
+    await this.screenshotDOMElement(`[${selector}='${productId}']`, `./screenshots/products/${productId}.png`)
+  }
+
 }
 
 module.exports = CatalogPage

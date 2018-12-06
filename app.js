@@ -23,55 +23,24 @@ if (!process.env.API_SG_KEY) {
     throw new Error('Error loading webpage')
   }
 
-  console.log('hola')
   let catalogPage = new CatalogPage(page)
   await catalogPage.setViewPort(1920, 1080)
   await catalogPage.goTo(databaseService.selectUrl())
-  console.log('hola2')
   await randomSleep()
-  console.log(await catalogPage.getProductsId())
-  console.log('hola3')
-  await randomSleep()
-  await catalogPage.screenshot()
-  console.log('hola4')
 
-  // try {
-    // await page.addScriptTag({
-    //   url: 'https://code.jquery.com/jquery-3.3.1.slim.min.js'
-    // })
+  let products = await catalogPage.getProductsId()
 
-    // await randomSleep()
-    // console.log('click cookies')
-    // try {
-    //   await page.click('#cookies-acceptance')
-    // } catch (err) {
-    //   console.log('No cookies acceptance button id found. Continue')
-    // }
+  await Promise.all(products.map(async productId =>
+    catalogPage.screenshotProduct(productId)
+  ))
 
-    // await randomSleep()
-    // console.log('despues timeout')
-    // await page.click('#start-purchase-process-desktop')
+  console.log(products)
+  let subscribers = databaseService.selectSubscribers()
+  console.log(subscribers)
 
-    // console.log('despues timeout')
-    // await randomSleep()
+  subscribers.map((subscriber) => emailService.notificateChanges(subscriber.email, JSON.stringify(products), products))
 
-    // let availableSessions = await page.evaluate(() => {
-    //   let data = []
-    //   let elements = document.getElementsByClassName('hasSession')
-    //   for (let element of elements) data.push(element.textContent)
-    //   return data
-    // })
+  databaseService.insertScraperLog(products)
 
-    // console.log(availableSessions)
-    // let subscribers = databaseService.selectSubscribers()
-    // console.log(subscribers)
-
-    // subscribers.map((subscriber) => emailService.notificateChanges(subscriber.email, JSON.stringify(availableSessions), availableSessions))
-
-    // await page.screenshot({ path: `./screenshots/screenshot.png` })
-    // databaseService.insertScraperLog(availableSessions)
-  // } catch (err) {
-  //   console.log(err)
-  // }
   await browser.close()
 })()

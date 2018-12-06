@@ -10,7 +10,7 @@ const randomNumberInRange = (min, max) => {
 
 // warning this is set to use 1 second
 const randomSleep = async () => {
-  await timeout(1000 * randomNumberInRange(1.5, 1.5))
+  await timeout(1000 * randomNumberInRange(3, 4))
 }
 
 module.exports = {
