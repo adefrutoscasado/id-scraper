@@ -1,5 +1,6 @@
 extends layout
 
 block content
-  h1= 'holidds'
-  p Welcome to #{title}
+  p #{url}
+  p #{JSON.stringify(scraperLog,null,2)}
+  p #{JSON.stringify(subscribers,null,2)}

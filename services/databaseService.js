@@ -61,6 +61,7 @@ const selectSubscribers = () => {
     .value()
 }
 
+// TODO: Unify expressions get/select
 module.exports = {
   setDefaults,
   insertScraperLog,

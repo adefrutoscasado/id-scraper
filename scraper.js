@@ -10,7 +10,7 @@ if (!process.env.API_SG_KEY) {
   )
 }
 
-// databaseService.setDefaults()
+databaseService.setDefaults();
 
 (async () => {
   let browser
@@ -23,24 +23,28 @@ if (!process.env.API_SG_KEY) {
     throw new Error('Error loading webpage')
   }
 
-  let catalogPage = new CatalogPage(page)
-  await catalogPage.setViewPort(1920, 1080)
-  await catalogPage.goTo(databaseService.selectUrl())
-  await randomSleep()
+  try {
+    let catalogPage = new CatalogPage(page)
+    await catalogPage.setViewPort(1920, 1080)
+    await catalogPage.goTo(databaseService.selectUrl())
+    await randomSleep()
 
-  let products = await catalogPage.getProductsId()
+    let products = await catalogPage.getProductsId()
 
-  await Promise.all(products.map(async productId =>
-    catalogPage.screenshotProduct(productId)
-  ))
+    await Promise.all(products.map(async productId =>
+      catalogPage.screenshotProduct(productId)
+    ))
 
-  console.log(products)
-  let subscribers = databaseService.selectSubscribers()
-  console.log(subscribers)
+    console.log(products)
+    let subscribers = databaseService.selectSubscribers()
+    console.log(subscribers)
 
-  subscribers.map((subscriber) => emailService.notificateChanges(subscriber.email, JSON.stringify(products), products))
+    subscribers.map((subscriber) => emailService.notificateChanges(subscriber.email, JSON.stringify(products), products))
 
-  databaseService.insertScraperLog(products)
+    databaseService.insertScraperLog(products)
+  } catch (err) {
+    throw new Error(err)
+  }
 
   await browser.close()
 })()

@@ -33,7 +33,7 @@ const notificateChanges = (recipient, text = 'This message contains no text', da
   // if its the first time scraping, send a notification
   if (!scraperLog || !scraperLog.length) {
     console.log('first time scraping, send a notification')
-    return sendMail(recipient, text)
+    return sendMail(recipient, `Scraper started for 1st time, data found: ${text}`)
   }
 
   let lastScraperLog = scraperLog[scraperLog.length - 1]
