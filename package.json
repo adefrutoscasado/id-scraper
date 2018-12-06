@@ -13,7 +13,8 @@
     "@sendgrid/mail": "^6.3.1",
     "lowdb": "^1.0.0",
     "moment": "^2.22.2",
-    "puppeteer": "^1.7.0"
+    "puppeteer": "^1.7.0",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

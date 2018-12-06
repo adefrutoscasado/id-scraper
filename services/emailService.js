@@ -1,6 +1,7 @@
 const sgMail = require('@sendgrid/mail')
 const moment = require('moment')
 const databaseService = require('./databaseService')
+const {arrayContentEqual} = require('./../helpers/array')
 const API_KEY = process.env.API_SG_KEY
 
 const sendMail = (recipient, text = 'This message contains no text') => {
@@ -12,7 +13,7 @@ const sendMail = (recipient, text = 'This message contains no text') => {
     html: text
   }
   sgMail.setApiKey(API_KEY)
-  // sgMail.send(msg)
+  sgMail.send(msg)
   databaseService.insertNotificationLog(recipient)
 }
 
@@ -36,7 +37,7 @@ const notificateChanges = (recipient, text = 'This message contains no text', da
   }
 
   let lastScraperLog = scraperLog[scraperLog.length - 1]
-  if (JSON.stringify(lastScraperLog.data) === JSON.stringify(data)) {
+  if (arrayContentEqual(lastScraperLog.data, data)) {
     console.log('theres no change in data, send a notification once a day')
     sendMailOnceADay(recipient, `Daily report, no changes detected in the data: ${text}`)
   } else {
