@@ -3,10 +3,11 @@ var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
+
+console.log(`Enviroment is ${process.env.ENV}`)
 const ENV = process.env.ENV || 'local'
 
 var app = express()
-
 
 // if local env, use livereload
 if (ENV === 'local') {
