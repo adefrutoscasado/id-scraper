@@ -4,8 +4,8 @@ var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 
-console.log(`Enviroment is ${process.env.ENV}`)
-const ENV = process.env.ENV || 'local'
+console.log(`Enviroment is ${process.env.NODE_ENV}`)
+const ENV = process.env.NODE_ENV || 'local'
 
 var app = express()
 
