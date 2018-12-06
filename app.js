@@ -3,25 +3,26 @@ var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
-
-const livereload = require('livereload')
-const livereloadMiddleware = require('connect-livereload')
-
-// Create a livereload server
-const hotServer = livereload.createServer({
-  // Reload on changes to these file extensions.
-  exts: [ 'json', 'pug', 'css', 'js' ],
-  // Print debug info
-  debug: false
-})
-
-// Specify the folder to watch for file-changes.
-hotServer.watch(__dirname)
+const ENV = process.env.ENV || 'local'
 
 var app = express()
 
-// Inject the livereload script tag into pages.
-app.use(livereloadMiddleware())
+
+// if local env, use livereload
+if (ENV === 'local') {
+  const livereload = require('livereload')
+  const livereloadMiddleware = require('connect-livereload')
+  // Create a livereload server
+  const hotServer = livereload.createServer({
+    // Reload on changes to these file extensions.
+    exts: [ 'json', 'pug', 'css', 'js' ],
+    // Print debug info
+    debug: false
+  })
+  hotServer.watch(__dirname)
+  // Inject the livereload script tag into pages.
+  app.use(livereloadMiddleware())
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

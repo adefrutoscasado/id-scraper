@@ -1,4 +1,5 @@
 node_modules/
+db.json
 
 # Untrack screenshots folder content, except products folder
 /public/images/screenshots/*
