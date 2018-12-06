@@ -1,46 +1,57 @@
-const puppeteer = require('puppeteer')
-const emailService = require('./services/emailService')
-const databaseService = require('./services/databaseService')
-const CatalogPage = require('./models/CatalogPage')
-const {randomSleep} = require('./helpers/randomTime')
+var createError = require('http-errors')
+var express = require('express')
+var path = require('path')
+var cookieParser = require('cookie-parser')
+var logger = require('morgan')
 
-if (!process.env.API_SG_KEY) {
-  throw new Error(
-    'API_SG_KEY not found. Please use "API_SG_KEY={{Your_sendGrid_api_key}} node app.js"'
-  )
-}
+const livereload = require('livereload')
+const livereloadMiddleware = require('connect-livereload')
+const fs = require('fs')
 
-// databaseService.setDefaults()
+// Create a livereload server
+const hotServer = livereload.createServer({
+  // Reload on changes to these file extensions.
+  exts: [ 'json', 'pug', 'css', 'js' ],
+  // Print debug info
+  debug: false
+})
 
-(async () => {
-  let browser
-  let page
-  try {
-    browser = await puppeteer.launch()
-    page = await browser.newPage()
-  } catch (err) {
-    console.error(err)
-    throw new Error('Error loading webpage')
-  }
+// Specify the folder to watch for file-changes.
+hotServer.watch(__dirname)
 
-  let catalogPage = new CatalogPage(page)
-  await catalogPage.setViewPort(1920, 1080)
-  await catalogPage.goTo(databaseService.selectUrl())
-  await randomSleep()
+var app = express()
 
-  let products = await catalogPage.getProductsId()
+// Inject the livereload script tag into pages.
+app.use(livereloadMiddleware())
 
-  await Promise.all(products.map(async productId =>
-    catalogPage.screenshotProduct(productId)
-  ))
+// view engine setup
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'pug')
 
-  console.log(products)
-  let subscribers = databaseService.selectSubscribers()
-  console.log(subscribers)
+var indexRouter = require('./routes/index')
 
-  subscribers.map((subscriber) => emailService.notificateChanges(subscriber.email, JSON.stringify(products), products))
+app.use(logger('dev'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')))
 
-  databaseService.insertScraperLog(products)
+app.use('/', indexRouter)
 
-  await browser.close()
-})()
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404))
+})
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message
+  res.locals.error = req.app.get('env') === 'development' ? err : {}
+
+  // render the error page
+  res.status(err.status || 500)
+  res.render('error')
+})
+
+module.exports = app
