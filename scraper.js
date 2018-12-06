@@ -16,7 +16,7 @@ databaseService.setDefaults();
   let browser
   let page
   try {
-    browser = await puppeteer.launch()
+    browser = await puppeteer.launch({args: ['--no-sandbox']}) // https://github.com/Googlechrome/puppeteer/issues/290
     page = await browser.newPage()
   } catch (err) {
     console.error(err)
