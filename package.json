@@ -36,5 +36,9 @@
     "livereload": "^0.4.1",
     "nodemon": "^1.18.4",
     "prettier-eslint": "^8.8.2"
+  },
+  "engines": {
+    "node": "7.10.0",
+    "npm": "4.2.0"
   }
 }
