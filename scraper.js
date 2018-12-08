@@ -2,6 +2,10 @@ const puppeteer = require('puppeteer')
 const emailService = require('./services/emailService')
 const databaseService = require('./services/databaseService')
 const CatalogPage = require('./models/web/catalogPage')
+const scraper = require('./models/database/scraper')
+const subscriber = require('./models/database/subscribers')
+const scraperLog = require('./models/database/scraperLog')
+
 const {randomSleep} = require('./helpers/randomTime')
 
 if (!process.env.API_SG_KEY) {
@@ -10,7 +14,7 @@ if (!process.env.API_SG_KEY) {
   )
 }
 
-databaseService.setDefaults();
+databaseService.mongoConnect();
 
 (async () => {
   let browser
@@ -26,7 +30,8 @@ databaseService.setDefaults();
   try {
     let catalogPage = new CatalogPage(page)
     await catalogPage.setViewPort(1920, 1080)
-    await catalogPage.goTo(databaseService.selectUrl())
+    console.log(await scraper.getUrl())
+    await catalogPage.goTo(await scraper.getUrl())
     await randomSleep()
 
     let products = await catalogPage.getProductsId()
@@ -36,15 +41,20 @@ databaseService.setDefaults();
     ))
 
     console.log(products)
-    let subscribers = databaseService.selectSubscribers()
+    let subscribers = await subscriber.getAll()
     console.log(subscribers)
 
-    subscribers.map((subscriber) => emailService.notificateChanges(subscriber.email, JSON.stringify(products), products))
+    await Promise.all(subscribers.map(s =>
+      emailService.notificateChanges(s.email, JSON.stringify(products), products)
+    ))
 
-    databaseService.insertScraperLog(products)
+    console.log(products)
+
+    await scraperLog.insert(products)
   } catch (err) {
     throw new Error(err)
   }
 
   await browser.close()
+  process.exit(0)
 })()

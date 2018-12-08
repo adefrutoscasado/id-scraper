@@ -9,21 +9,31 @@ const NotificationLogSchema = new Schema(
 const SubscribersSchema = new Schema(
   {
     email: { type: String, required: true, unique: true, trim: true, match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Invalid email address'] },
-    notification_log: [
+    notificationLog: [
       NotificationLogSchema
     ]
   },
   { timestamps: true }
 )
 
-SubscribersSchema.methods = {
-  insert: async function (email) {
-    this.email = email
-    return this.save() // returns a promise
-  },
-  insertNotificationLog: async function (email) {
-    return this.findOne({email})
+class SubscriberModel extends Model {
+  static getAll() {
+    return this.find({})
+  }
+  static insert(email) {
+    let scraper = new this()
+    scraper.email = email
+    return scraper.save() // returns a promise
+  }
+  static async insertNotificationLog(email) {
+    return this.findOneAndUpdate({email}, {$push: {notificationLog: {}}})
+  }
+  static async getNotificationLog(email) {
+    return (await this.findOne({email})).notificationLog
   }
 }
 
-module.exports = mongoose.model('Subscribers', SubscribersSchema)
+SubscribersSchema.loadClass(SubscriberModel)
+let Subscriber = mongoose.model('subscribers', SubscribersSchema)
+
+module.exports = Subscriber

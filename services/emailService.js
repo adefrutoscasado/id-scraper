@@ -1,10 +1,12 @@
 const sgMail = require('@sendgrid/mail')
 const moment = require('moment')
-const databaseService = require('./databaseService')
+// const databaseService = require('./databaseService')
 const {arrayContentEqual} = require('./../helpers/array')
 const API_KEY = process.env.API_SG_KEY
+const Subscriber = require('./../models/database/subscribers')
+const ScraperLog = require('./../models/database/scraperLog')
 
-const sendMail = (recipient, text = 'This message contains no text') => {
+const sendMail = async (recipient, text = 'This message contains no text') => {
   const msg = {
     to: recipient,
     from: 'puppeter-no-reply@puppeter.com',
@@ -13,37 +15,41 @@ const sendMail = (recipient, text = 'This message contains no text') => {
     html: text
   }
   sgMail.setApiKey(API_KEY)
-  sgMail.send(msg)
-  databaseService.insertNotificationLog(recipient)
+  // sgMail.send(msg)
+  await Subscriber.insertNotificationLog(recipient)
+  return true
 }
 
-const sendMailOnceADay = (recipient, text = 'This message contains no text') => {
-  let notificationLog = databaseService.getNotificationLog(recipient)
+const sendMailOnceADay = async (recipient, text = 'This message contains no text') => {
+  let notificationLog = Subscriber.getNotificationLog(recipient)
 
-  if (!notificationLog || !notificationLog.length) sendMail(recipient, text)
+  if (!notificationLog || !notificationLog.length) await sendMail(recipient, text)
 
   let lastNotificationLog = notificationLog[notificationLog.length - 1]
-  if ((moment(lastNotificationLog)).isBefore(moment().subtract(1, 'day'))) sendMail(recipient, text)
+  if ((moment(lastNotificationLog)).isBefore(moment().subtract(1, 'day'))) await sendMail(recipient, text)
+  return true
 }
 
-const notificateChanges = (recipient, text = 'This message contains no text', data) => {
+const notificateChanges = async (recipient, text = 'This message contains no text', data) => {
   console.log('notificateChanges')
-  let scraperLog = databaseService.getScraperLog()
+  let lastScraperLog = await ScraperLog.getLast()
+
+  console.log(lastScraperLog)
 
   // if its the first time scraping, send a notification
-  if (!scraperLog || !scraperLog.length) {
+  if (!lastScraperLog) {
     console.log('first time scraping, send a notification')
-    return sendMail(recipient, `Scraper started for 1st time, data found: ${text}`)
+    return await sendMail(recipient, `Scraper started for 1st time, data found: ${text}`)
   }
 
-  let lastScraperLog = scraperLog[scraperLog.length - 1]
   if (arrayContentEqual(lastScraperLog.data, data)) {
     console.log('theres no change in data, send a notification once a day')
-    sendMailOnceADay(recipient, `Daily report, no changes detected in the data: ${text}`)
+    await sendMailOnceADay(recipient, `Daily report, no changes detected in the data: ${text}`)
   } else {
     console.log('there is a change in data, send a notification inmediately')
-    sendMail(recipient, `There is a change in the data: ${text}`)
+    await sendMail(recipient, `There is a change in the data: ${text}`)
   }
+  return true
 }
 
 module.exports = {

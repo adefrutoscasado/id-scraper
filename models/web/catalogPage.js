@@ -1,5 +1,5 @@
 const Webpage = require('./webpage.js')
-const CONSTANTS = require('./../CONSTANTS/CATALOG')
+const CONSTANTS = require('./../../CONSTANTS/CATALOG')
 
 class CatalogPage extends Webpage {
   constructor(page) {

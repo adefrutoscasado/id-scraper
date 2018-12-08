@@ -17,8 +17,9 @@ class ScraperModel extends Model {
     scraper.url = url
     return scraper.save() // returns a promise
   }
-  static async getLast() {
-    return (await this.find({}).sort('-createdAt').limit(1))[0]
+  // TODO: Only one element should be allowed in this collection
+  static async getUrl() {
+    return (await this.find({}).sort('-createdAt').limit(1))[0].url
   }
 }
 
