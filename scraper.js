@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer')
 const emailService = require('./services/emailService')
 const databaseService = require('./services/databaseService')
-const CatalogPage = require('./models/CatalogPage')
+const CatalogPage = require('./models/web/catalogPage')
 const {randomSleep} = require('./helpers/randomTime')
 
 if (!process.env.API_SG_KEY) {
