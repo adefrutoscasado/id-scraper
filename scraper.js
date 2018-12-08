@@ -37,7 +37,7 @@ databaseService.mongoConnect();
     let products = await catalogPage.getProductsId()
 
     await Promise.all(products.map(async productId =>
-      catalogPage.screenshotProduct(productId)
+      catalogPage.screenshotProduct(productId, true)
     ))
 
     console.log(products)

@@ -9,6 +9,9 @@ const ScraperLogSchema = new Schema(
 )
 
 class ScraperLogModel extends Model {
+  static getAll() {
+    return this.find({})
+  }
   static insert(data) {
     let scraperLog = new this()
     scraperLog.data = data

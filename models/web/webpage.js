@@ -29,22 +29,27 @@ class Webpage {
     this.loadedCanvas2Html = true
   }
 
-  async screenshotDOMElement(selector, outputPath = './public/images/screenshots/DOMelement.png', padding = 0) {
+  async screenshotDOMElement(selector, padding = 0) {
+    const options = {
+      type: 'png',
+      fullPage: false,
+      encoding: 'base64'
+    }
     try {
       const rect = await this.page.evaluate(selector => {
         const element = document.querySelector(selector)
         const {x, y, width, height} = element.getBoundingClientRect()
         return {left: x, top: y, width, height, id: element.id}
       }, selector)
-
+      
       return await this.page.screenshot({
-        path: outputPath,
         clip: {
           x: rect.left - padding,
           y: rect.top - padding,
           width: rect.width + padding * 2,
           height: rect.height + padding * 2
-        }
+        },
+        ...options
       })
     } catch (error) {
       throw new Error(`Unable to screenshot DOM element using selector ${selector}.\nError: ${error}`)

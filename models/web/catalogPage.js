@@ -1,5 +1,6 @@
 const Webpage = require('./webpage.js')
 const CONSTANTS = require('./../../CONSTANTS/CATALOG')
+const item = require('./../database/item')
 
 class CatalogPage extends Webpage {
   constructor(page) {
@@ -21,9 +22,11 @@ class CatalogPage extends Webpage {
     }
   }
 
-  async screenshotProduct(productId) {
+  async screenshotProduct(productId, saveImage = false) {
     let selector = CONSTANTS.PRODUCT_ID_SELECTOR
-    await this.screenshotDOMElement(`[${selector}='${productId}']`, `./public/images/screenshots/products/${productId}.png`)
+    let screenshot = await this.screenshotDOMElement(`[${selector}='${productId}']`)
+    if (saveImage) await item.upsert(productId, screenshot)
+    return screenshot
   }
 }
 

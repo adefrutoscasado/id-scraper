@@ -3,6 +3,7 @@ var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
+const databaseService = require('./services/databaseService')
 
 const ENV = process.env.NODE_ENV || 'local'
 console.log(`NODE_ENV variable is ${process.env.NODE_ENV}, using ${ENV} enviroment`)
@@ -23,7 +24,17 @@ if (ENV === 'local') {
   hotServer.watch(__dirname)
   // Inject the livereload script tag into pages.
   app.use(livereloadMiddleware())
+
+  // No-cache in local enviroment (Avoid 304 code)
+  app.use((req, res, next) => {
+    res.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+    res.header('Pragma', 'no-cache')
+    res.header('Expires', 0)
+    next()
+  })
 }
+
+databaseService.mongoConnect()
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

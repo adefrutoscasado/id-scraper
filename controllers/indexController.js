@@ -1,11 +1,15 @@
 const asyncUtil = require('../services/asyncService')
-const databaseService = require('../services/databaseService')
+const Scraper = require('./../models/database/scraper')
+const Subscriber = require('./../models/database/subscribers')
+const ScraperLog = require('./../models/database/scraperLog')
+const {logCircularJson} = require('./../helpers/logCircularJson')
 
 module.exports = {
   index: asyncUtil(async (req, res, next) => {
-    let url = databaseService.selectUrl()
-    let scraperLog = databaseService.getScraperLog()
-    let subscribers = databaseService.selectSubscribers()
+    let url = await Scraper.getUrl()
+    let scraperLog = await ScraperLog.getAll()
+    let subscribers = await Subscriber.getAll()
+
     res.render('index', {
       title: 'Amazon scraper',
       url,
