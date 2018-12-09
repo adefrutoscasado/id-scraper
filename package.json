@@ -8,7 +8,9 @@
     "scraper": "node scraper.js",
     "nodemon": "node_modules/nodemon/bin/nodemon.js ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "mongodstart": "sudo service mongod start"
+    "mongodstart": "sudo service mongod start",
+    "addsubscriber": "node config/addSubscriber.js",
+    "addscraper": "node config/addScraper.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +24,7 @@
     "moment": "^2.22.2",
     "mongoose": "^5.3.15",
     "morgan": "~1.9.0",
+    "prompt": "^1.0.0",
     "pug": "2.0.0-beta11",
     "puppeteer": "^1.7.0",
     "underscore": "^1.9.1"
