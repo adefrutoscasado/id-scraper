@@ -42,7 +42,7 @@
     "prettier-eslint": "^8.8.2"
   },
   "engines": {
-    "node": "11.4.0",
+    "node": "10.14.0",
     "npm": "4.2.0"
   }
 }
