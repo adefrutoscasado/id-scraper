@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "mongodstart": "sudo service mongod start",
     "addsubscriber": "node config/addSubscriber.js",
-    "addscraper": "node config/addScraper.js"
+    "addscraper": "node config/addUrl.js"
   },
   "author": "",
   "license": "ISC",
