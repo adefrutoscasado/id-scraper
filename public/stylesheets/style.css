@@ -1,0 +1,13 @@
+html {
+  padding: 20px
+}
+
+table {
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+
+td, th {
+  vertical-align: middle !important;
+  text-align: center !important;
+}

@@ -1,6 +1,26 @@
 extends layout
 
 block content
-  p #{url}
-  p #{JSON.stringify(scraperLog,null,2)}
-  p #{JSON.stringify(subscribers,null,2)}
+
+  h5 Report
+
+  table.table.is-fullwidth.is-striped
+    thead
+      tr 
+        th Image
+        th ID
+          each products, time in timeline
+            th= time
+    tbody
+      each item in items
+        tr
+          td
+            img(src=item.imageBase64String)
+          td=item.productId
+            each p, t in timeline
+              - if (p.includes(item.productId))
+                td.center
+                  i.em.em-white_check_mark
+              - else
+                td.center
+                  i.em.em-x
