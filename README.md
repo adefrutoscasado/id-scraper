@@ -20,6 +20,7 @@ The retrospective report of tracked elements can be found at the root link of th
 This app uses a number of open source projects to work properly:
 - [Node.js](https://nodejs.org/)
 - [MongoDB](https://www.mongodb.com/)
+- [Puppeteer](https://github.com/GoogleChrome/puppeteer)
 
 ### Installing
 
