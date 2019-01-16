@@ -47,6 +47,12 @@ It is possible to deploy on [Heroku](https://heroku.com/) easily. The recommende
 - [mLab MongoDB](https://elements.heroku.com/addons/mongolab): Data found is saved at MongoDB, in order to be able to compare between samples and send notifications when changes appear.
 - [Heroku Scheduler](https://elements.heroku.com/addons/scheduler): A scheduler is needed in order to track the web in a given period of time.
 
+## Demo
+
+Please note following live demo is not maintained. Since web scraping needs high maintenance frequency I dont assure that the demo will work.
+
+http://amazon-scrap.herokuapp.com/
+
 ## License
 
 This project is licensed under the MIT License
