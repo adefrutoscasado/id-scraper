@@ -6,7 +6,7 @@ A web scraper app to track elements of a webpage given a HTML attribute. Includi
 
 ## Getting Started
 
-At ./CONSTANTS/CATALOG.js, the HTML attribute to track should be specified:
+At ./constants/catalog.js, the HTML attribute to track should be specified:
 
 ![HTML attribute sample](https://gitlab.com/adefrutoscasado/id-scraper/raw/assets/config-sample.png)
 
